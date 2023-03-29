@@ -3,12 +3,8 @@ package utils
 import (
 	"fmt"
 	"strings"
-
 	"os"
 	"path/filepath"
-
-	// "sync"
-
 	"github.com/MohammadrezaAmani/Mosic/database"
 	"github.com/MohammadrezaAmani/Mosic/models"
 	"github.com/bogem/id3v2/v2"
@@ -44,7 +40,9 @@ func ReadFile(path string) {
 	}
 }
 
-func WalkDir(path string, recursive bool) {
+func WalkDir() {
+	path:= "/mnt/D/personal/Musics"
+	recursive:= true
 	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		check(err)
 		if info.IsDir() && !recursive && path != "je" {

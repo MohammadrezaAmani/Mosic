@@ -5,9 +5,9 @@ import (
 
 	"github.com/MohammadrezaAmani/Mosic/database"
 	"github.com/MohammadrezaAmani/Mosic/models"
+	"github.com/MohammadrezaAmani/Mosic/utils"
 	"github.com/gin-gonic/gin"
 )
-
 
 func PostAlbum(c *gin.Context) {
 	var newAlbum models.Album
@@ -24,7 +24,7 @@ func GetAlbumByID(c *gin.Context) {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 		return
 	}
-	c.IndentedJSON(http.StatusOK,album)
+	c.IndentedJSON(http.StatusOK, album)
 }
 
 func GetAlbums(c *gin.Context) {
@@ -38,7 +38,7 @@ func GetMusicByID(c *gin.Context) {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "music not found"})
 		return
 	}
-	c.IndentedJSON(http.StatusOK,music)
+	c.IndentedJSON(http.StatusOK, music)
 }
 
 func GetMusics(c *gin.Context) {
@@ -51,4 +51,18 @@ func PostMusic(c *gin.Context) {
 	}
 	go database.AddMusic(newMusic)
 	c.IndentedJSON(http.StatusOK, newMusic)
+}
+func Rescan(c *gin.Context) {
+	database.EmptyMusic()
+	utils.WalkDir()
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "scanned successfully"})
+}
+
+func Remove(c *gin.Context) {
+	err:= database.RemoveMusic(c.Param("id"))
+	if err!=nil {
+		c.IndentedJSON(http.StatusBadRequest,"err")
+		return
+	}
+	c.IndentedJSON(http.StatusOK, gin.H{"message":"music remove sucessfully"})
 }

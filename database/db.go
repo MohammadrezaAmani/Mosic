@@ -3,6 +3,7 @@ package database
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/MohammadrezaAmani/Mosic/models"
 )
@@ -46,4 +47,18 @@ func GetMusicByID(id string) (*models.Music, error) {
 		}
 	}
 	return &models.Music{}, errors.New("not found")
+}
+func EmptyMusic() {
+	Musics = []models.Music{}
+}
+func RemoveMusic(id string) error {
+	music,err := GetMusicByID(id)
+	if err != nil{
+		return err
+	}
+	err = os.Remove(music.Path)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func main() {
 	router := gin.Default()
 	router.GET("/albums", api.GetAlbums)
@@ -15,6 +14,8 @@ func main() {
 	router.GET("/musics", api.GetMusics)
 	router.POST("/musics", api.PostMusic)
 	router.GET("/music/:id", api.GetMusicByID)
-	utils.WalkDir("/mnt/D/personal/Musics", true)
+	router.GET("/rescan", api.Rescan)
+	router.GET("/remove/:id", api.Remove)
+	utils.WalkDir()
 	router.Run("localhost:8000")
 }
