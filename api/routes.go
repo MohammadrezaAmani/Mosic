@@ -62,30 +62,45 @@ func Rescan(c *gin.Context) {
 }
 
 func Remove(c *gin.Context) {
-	err:= database.RemoveMusic(c.Param("id"))
-	if err!=nil {
-		c.IndentedJSON(http.StatusBadRequest,"err")
+	err := database.RemoveMusic(c.Param("id"))
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, "err")
 		return
 	}
-	c.IndentedJSON(http.StatusOK, gin.H{"message":"music remove sucessfully"})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "music remove sucessfully"})
 }
 func GetMusic(c *gin.Context) {
 	id := c.Param("id")
-	music,err := database.GetMusicByID(id)
+	music, err := database.GetMusicByID(id)
 	if err != nil {
 		log.Println(err)
-		c.IndentedJSON(http.StatusNotFound,"not found")
+		c.IndentedJSON(http.StatusNotFound, "not found")
 		return
 
 	}
 	content, err2 := os.ReadFile(music.Path)
 	if err2 != nil {
 		log.Println(err2)
-		c.IndentedJSON(http.StatusNotFound,"not found")
+		c.IndentedJSON(http.StatusNotFound, "not found")
 		return
 	}
 	log.Printf(music.FileName)
-	c.Header("Content-Type","attachment; filename="+ music.FileName)
-	c.Header("Accept-Length",fmt.Sprintf("%d",len(content)))
+	c.Header("Content-Type", "attachment; filename="+music.FileName)
+	c.Header("Accept-Length", fmt.Sprintf("%d", len(content)))
 	c.Writer.Write(content)
+}
+
+type Path struct {
+	PathText string `json:"path"`
+}
+
+func AddPath(c *gin.Context) {
+	var p Path
+	if err := c.BindJSON(&p); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	database.AddPath(p.PathText)
+	c.JSON(http.StatusOK, gin.H{"status": "path add successfully"})
+	utils.WalkDir()
 }

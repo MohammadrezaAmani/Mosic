@@ -18,5 +18,6 @@ type Music struct {
 	Path     string `json:"path"`
 	FileName string `json:"filename"`
 }
-type Settings struct {
+type Setting struct {
+	MusicPath []string 
 }

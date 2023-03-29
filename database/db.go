@@ -18,6 +18,8 @@ var Albums = []models.Album{
 }
 var Musics = []models.Music{}
 
+var settings = models.Setting{}
+
 func AddAlbum(a models.Album) {
 	Albums = append(Albums, a)
 }
@@ -71,6 +73,21 @@ func InitialDB() {
 	if err != nil {
 		log.Println(err)
 	}
-	db.AutoMigrate(&models.Settings{})
-	
+	db.AutoMigrate(&models.Setting{})
+}
+
+func AddPath(path string) error {
+	for _, p := range settings.MusicPath{
+		if p == path {
+			return errors.New("path already exist")
+		}
+	}
+	settings.MusicPath = append(settings.MusicPath, path)
+	return nil
+}
+
+func GetPath() []string{
+	var p []string
+	p = append(p, settings.MusicPath...)
+	return p
 }
