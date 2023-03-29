@@ -5,6 +5,14 @@ go 1.20
 require github.com/gin-gonic/gin v1.9.0
 
 require (
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/mattn/go-sqlite3 v1.14.15 // indirect
+	gorm.io/driver/sqlite v1.4.4
+	gorm.io/gorm v1.24.6
+)
+
+require (
 	github.com/bogem/id3v2/v2 v2.1.4
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect

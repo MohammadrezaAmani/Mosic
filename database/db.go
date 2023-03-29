@@ -3,9 +3,12 @@ package database
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/MohammadrezaAmani/Mosic/models"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 var Albums = []models.Album{
@@ -61,4 +64,13 @@ func RemoveMusic(id string) error {
 		return err
 	}
 	return nil
+}
+
+func InitialDB() {
+	db, err := gorm.Open(sqlite.Open("test.db"),&gorm.Config{})
+	if err != nil {
+		log.Println(err)
+	}
+	db.AutoMigrate(&models.Settings{})
+	
 }

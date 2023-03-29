@@ -20,6 +20,8 @@ func check(e error) {
 func ReadFile(path string) {
 	pathes := strings.Split(path, ".")
 	name := pathes[len(pathes)-1]
+	filenames := strings.Split(path,"/")
+	filename := filenames[len(filenames)-1]
 	formats := [6]string{"mp3", "wav", "flac", "aac", "ogg", "m4a"}
 	for _, f := range formats {
 		if strings.ToLower(name) == f {
@@ -33,6 +35,7 @@ func ReadFile(path string) {
 				Genre: tag.Genre(),
 				Path: path,
 				Size: fmt.Sprint(tag.Size()),
+				FileName: filename,
 			})
 			defer tag.Close()
 			

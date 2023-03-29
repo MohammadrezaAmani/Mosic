@@ -1,7 +1,10 @@
 package api
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/MohammadrezaAmani/Mosic/database"
 	"github.com/MohammadrezaAmani/Mosic/models"
@@ -65,4 +68,24 @@ func Remove(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusOK, gin.H{"message":"music remove sucessfully"})
+}
+func GetMusic(c *gin.Context) {
+	id := c.Param("id")
+	music,err := database.GetMusicByID(id)
+	if err != nil {
+		log.Println(err)
+		c.IndentedJSON(http.StatusNotFound,"not found")
+		return
+
+	}
+	content, err2 := os.ReadFile(music.Path)
+	if err2 != nil {
+		log.Println(err2)
+		c.IndentedJSON(http.StatusNotFound,"not found")
+		return
+	}
+	log.Printf(music.FileName)
+	c.Header("Content-Type","attachment; filename="+ music.FileName)
+	c.Header("Accept-Length",fmt.Sprintf("%d",len(content)))
+	c.Writer.Write(content)
 }

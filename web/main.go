@@ -16,6 +16,8 @@ func main() {
 	router.GET("/music/:id", api.GetMusicByID)
 	router.GET("/rescan", api.Rescan)
 	router.GET("/remove/:id", api.Remove)
+	router.GET("/get/:id", api.GetMusic)
+
 	utils.WalkDir()
-	router.Run("localhost:8000")
+	router.Run("0.0.0.0:8000")
 }
