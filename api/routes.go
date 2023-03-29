@@ -30,3 +30,25 @@ func GetAlbumByID(c *gin.Context) {
 func GetAlbums(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, *database.GetAllAlbums())
 }
+
+func GetMusicByID(c *gin.Context) {
+	id := c.Param("id")
+	music, err := database.GetMusicByID(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "music not found"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK,music)
+}
+
+func GetMusics(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, *database.GetAllMusics())
+}
+func PostMusic(c *gin.Context) {
+	var newMusic models.Music
+	if err := c.BindJSON(&newMusic); err != nil {
+		return
+	}
+	go database.AddMusic(newMusic)
+	c.IndentedJSON(http.StatusOK, newMusic)
+}

@@ -2,6 +2,7 @@ package database
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/MohammadrezaAmani/Mosic/models"
 )
@@ -11,6 +12,7 @@ var Albums = []models.Album{
 	{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
 	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
 }
+var Musics = []models.Music{}
 
 func AddAlbum(a models.Album) {
 	Albums = append(Albums, a)
@@ -27,4 +29,21 @@ func GetAlbumByID(id string) (*models.Album, error) {
 		}
 	}
 	return &models.Album{}, errors.New("not found")
+}
+func AddMusic(m models.Music) {
+	m.ID = fmt.Sprint(len(Musics))
+	Musics = append(Musics, m)
+}
+
+func GetAllMusics() *[]models.Music {
+	return &Musics
+}
+
+func GetMusicByID(id string) (*models.Music, error) {
+	for _, a := range Musics {
+		if a.ID == id {
+			return &a, nil
+		}
+	}
+	return &models.Music{}, errors.New("not found")
 }

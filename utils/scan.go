@@ -1,36 +1,46 @@
-package main
+package utils
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
-	"github.com/MohammadrezaAmani/Mosic/models"
 	"os"
 	"path/filepath"
-	"sync"
+
+	// "sync"
+
+	"github.com/MohammadrezaAmani/Mosic/database"
+	"github.com/MohammadrezaAmani/Mosic/models"
+	"github.com/bogem/id3v2/v2"
 )
 
-var wg sync.WaitGroup
-
-var musics []models.Music
 
 func check(e error) {
 	if e != nil {
-		panic(e)
+		fmt.Println(e)
 	}
 }
 
 func ReadFile(path string) {
-	wg.Done()
 	pathes := strings.Split(path, ".")
 	name := pathes[len(pathes)-1]
 	formats := [6]string{"mp3", "wav", "flac", "aac", "ogg", "m4a"}
 	for _, f := range formats {
 		if strings.ToLower(name) == f {
-			log.Println(path)
+			tag, err := id3v2.Open(path, id3v2.Options{Parse: true})
+			check(err)
+			database.AddMusic(models.Music{
+				Name: tag.Title(),
+				Artist: tag.Artist(),
+				Year: tag.Year(),
+				Album: tag.Album(),
+				Genre: tag.Genre(),
+				Path: path,
+				Size: fmt.Sprint(tag.Size()),
+			})
+			defer tag.Close()
+			
 		}
-
 	}
 }
 
@@ -42,7 +52,6 @@ func WalkDir(path string, recursive bool) {
 		}
 		{
 			if info.Mode().IsRegular() {
-				wg.Add(1)
 				go ReadFile(path)
 			}
 		}
@@ -54,10 +63,5 @@ func WalkDir(path string, recursive bool) {
 }
 
 // func ScanMusic(path string, recursive bool) ([]models.Music, error) {
-// []string{"MP3", "WAV", "FLAC", "AAC", "OGG"}
-//
-//		return []models.Music{}, nil
-//	}
-func main() {
-	WalkDir("/mnt/D/personal/Musics", true)
-}
+// 		return , nil
+// 	}
