@@ -18,6 +18,10 @@ func main() {
 	router.GET("/remove/:id", api.Remove)
 	router.GET("/get/:id", api.GetMusic)
 	router.POST("/path",api.AddPath)
+	router.GET("/star/:id", api.AddStar)
+	router.GET("/unstar/:id", api.RemoveStar)
+	router.GET("/stars/", api.Stars)
+
 
 	utils.WalkDir()
 	router.Run("0.0.0.0:8000")

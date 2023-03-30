@@ -26,7 +26,7 @@ func ReadFile(path string) {
 		if strings.ToLower(name) == f {
 			tag, err := id3v2.Open(path, id3v2.Options{Parse: true})
 			check(err)
-			database.AddMusic(models.Music{
+			m := models.Music{
 				Name:     tag.Title(),
 				Artist:   tag.Artist(),
 				Year:     tag.Year(),
@@ -35,7 +35,9 @@ func ReadFile(path string) {
 				Path:     path,
 				Size:     fmt.Sprint(tag.Size()),
 				FileName: filename,
-			})
+			}
+			m.UniqueID = m.Unique()
+			database.AddMusic(m)
 			defer tag.Close()
 
 		}

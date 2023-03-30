@@ -57,8 +57,8 @@ func EmptyMusic() {
 	Musics = []models.Music{}
 }
 func RemoveMusic(id string) error {
-	music,err := GetMusicByID(id)
-	if err != nil{
+	music, err := GetMusicByID(id)
+	if err != nil {
 		return err
 	}
 	err = os.Remove(music.Path)
@@ -69,7 +69,7 @@ func RemoveMusic(id string) error {
 }
 
 func InitialDB() {
-	db, err := gorm.Open(sqlite.Open("test.db"),&gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		log.Println(err)
 	}
@@ -77,7 +77,7 @@ func InitialDB() {
 }
 
 func AddPath(path string) error {
-	for _, p := range settings.MusicPath{
+	for _, p := range settings.MusicPath {
 		if p == path {
 			return errors.New("path already exist")
 		}
@@ -86,8 +86,46 @@ func AddPath(path string) error {
 	return nil
 }
 
-func GetPath() []string{
+func GetPath() []string {
 	var p []string
 	p = append(p, settings.MusicPath...)
 	return p
+}
+
+func AddStar(id string) {
+	music, err := GetMusicByID(id)
+	if err != nil {
+		return
+	}
+	for _, m := range settings.Starred {
+		if m == music.UniqueID {
+			return
+		}
+	}
+	settings.Starred = append(settings.Starred, music.UniqueID)
+}
+func RemoveStar(id string) {
+	music, err := GetMusicByID(id)
+	if err != nil {
+		return
+	}
+	for i, m := range settings.Starred {
+		if m == music.UniqueID {
+			settings.Starred = append(settings.Starred[:i], settings.Starred[i+1:]...)
+			return
+		}
+	}
+}
+
+func Starred() []models.Music {
+	st := []models.Music{}
+
+	for _, id := range settings.Starred {
+		for _, music := range Musics {
+			if id == music.UniqueID {
+				st = append(st, music)
+			}
+		}
+	}
+	return st
 }

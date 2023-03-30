@@ -1,5 +1,7 @@
 package models
 
+import "encoding/base64"
+
 type Album struct {
 	ID     string  `json:"id"`
 	Title  string  `json:"title"`
@@ -17,7 +19,15 @@ type Music struct {
 	Year     string `json:"year"`
 	Path     string `json:"path"`
 	FileName string `json:"filename"`
+	UniqueID string `json:"uniqueid"`
 }
+
+func (m Music) Unique() string {
+	text := m.Name + m.Artist + m.Size + m.Path
+	return base64.StdEncoding.EncodeToString([]byte(text))
+}
+
 type Setting struct {
-	MusicPath []string 
+	MusicPath []string
+	Starred   []string
 }

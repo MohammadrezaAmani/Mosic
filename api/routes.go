@@ -104,3 +104,17 @@ func AddPath(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "path add successfully"})
 	utils.WalkDir()
 }
+
+func AddStar(c *gin.Context){
+	id := c.Param("id")
+	database.AddStar(id)
+	c.JSON(http.StatusOK, gin.H{"status": "music stared successfully"})
+}
+func RemoveStar(c *gin.Context){
+	id := c.Param("id")
+	database.RemoveStar(id)
+	c.JSON(http.StatusOK, gin.H{"status": "music star removed successfully"})
+}
+func Stars(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, database.Starred())
+}
