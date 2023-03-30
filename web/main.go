@@ -21,6 +21,8 @@ func main() {
 	router.GET("/star/:id", api.AddStar)
 	router.GET("/unstar/:id", api.RemoveStar)
 	router.GET("/stars/", api.Stars)
+	router.POST("/search",api.Search)
+
 
 
 	utils.WalkDir()

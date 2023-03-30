@@ -31,3 +31,18 @@ type Setting struct {
 	MusicPath []string
 	Starred   []string
 }
+
+//? other structs
+
+type Path struct {
+	PathText string `json:"path"`
+}
+type Search struct {
+	Text  string `json:"text"`
+	TimeMax  string `json:"timemax"`
+	TimeMin  string `json:"timemin"`
+	SizeMin  string `json:"sizemin"`
+	SizeMax  string `json:"sizemax"`
+	Year  string `json:"year"`
+	Genre string `json:"genre"`
+}

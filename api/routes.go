@@ -90,12 +90,9 @@ func GetMusic(c *gin.Context) {
 	c.Writer.Write(content)
 }
 
-type Path struct {
-	PathText string `json:"path"`
-}
 
 func AddPath(c *gin.Context) {
-	var p Path
+	var p models.Path
 	if err := c.BindJSON(&p); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -117,4 +114,14 @@ func RemoveStar(c *gin.Context){
 }
 func Stars(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, database.Starred())
+}
+
+func Search(c *gin.Context) {
+	var s models.Search
+	if err := c.BindJSON(&s); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, database.Search(s))
+	utils.WalkDir()
 }

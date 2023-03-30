@@ -4,7 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
+	// "time"
+
+	// "strconv"
+	"strings"
 
 	"github.com/MohammadrezaAmani/Mosic/models"
 	"gorm.io/driver/sqlite"
@@ -128,4 +133,22 @@ func Starred() []models.Music {
 		}
 	}
 	return st
+}
+
+func Search(s models.Search) []models.Music {
+	music := []models.Music{}
+	for _,m := range Musics {
+		// if s.Time != 0 {
+		// 	if 
+		// }
+		if strings.Contains(strings.ToLower(m.Album+" "+m.Artist+" "+m.Name), strings.ToLower(s.Text)) {
+			music = append(music, m)
+		}
+	}
+	return music
+}
+func Shuffle() []models.Music {
+	m := Musics
+	rand.Shuffle(len(m), func(i, j int) { m[i], m[j] = m[j], m[i] })
+	return m
 }
